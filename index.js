@@ -15,7 +15,7 @@ io.on("connection", function (socket) {
   console.log(users);
   socket.join(socket.id);
   socket.on("chat message", function (msg) {
-    io.in(socket.id).emit("chat message", msg);
+    io.in(socket.id).emit("chat message", "from bot " + msg);
     console.log("message: " + msg);
   });
   socket.on("disconnect", function () {

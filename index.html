@@ -19,19 +19,24 @@
   $(function () {
     var socket = io.connect('http://localhost:3000');
     $('form').submit(function(){
+      $('#usermessage').append($('<li>').text( $('#m').val()));
       socket.emit('chat message', $('#m').val());
       $('#m').val('');
       return false;
     });
     socket.on('chat message', function(msg){
-      $('#messages').append($('<li>').text(msg));
+      $('#botmessages').append($('<li>').text(msg));
     });
   });
 </script>
   
   </head>
   <body>
-    <ul id="messages"></ul>
+    <h1>from user:</h1>
+    <ul id="usermessage">
+    </ul>
+  <h1>from bot:</h1>
+    <ul id="botmessages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
