@@ -12,14 +12,18 @@ let users = {};
 io.on("connection", function (socket) {
   console.log("a user connected");
   users[socket.id] = socket.id;
-  console.log(users);
+  // console.log(users);
   socket.join(socket.id);
+  // console.log(socket.rooms);
   socket.on("chat message", function (msg) {
     io.in(socket.id).emit("chat message", "from bot " + msg);
     console.log("message: " + msg);
   });
   socket.on("disconnect", function () {
-    console.log("user disconnected");
+    console.info("disconnected user (id=" + socket.id + ").");
+    delete users[socket.id];
+    // console.log(users);
+    // console.log(socket.rooms);
   });
 });
 
