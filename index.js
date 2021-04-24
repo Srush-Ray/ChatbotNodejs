@@ -3,12 +3,14 @@ var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 const { spawn } = require("child_process");
+const Pool = require("pg").Pool;
 
 const port = process.env.PORT;
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
+
 let users = {};
 
 io.on("connection", function (socket) {
@@ -17,6 +19,7 @@ io.on("connection", function (socket) {
   socket.join(socket.id);
   // console.log(socket.rooms);
   socket.on("chat message", function (msg) {
+    console.log(msg);
     const python = spawn("python", ["script.py", msg]);
     var dataToSend;
     python.stdout.on("data", function (data) {
@@ -26,6 +29,7 @@ io.on("connection", function (socket) {
     python.on("close", (code) => {
       // send data to browser
       // res.send(dataToSend);
+      console.log(dataToSend);
       io.in(socket.id).emit("chat message", "from bot " + dataToSend);
     });
 
@@ -42,4 +46,23 @@ io.on("connection", function (socket) {
 
 http.listen(port || 5000, function () {
   console.log("listening on *:3000");
+});
+//////////////////////////////////////////////////////////////
+const pool = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "chatbot",
+  password: "srushti6",
+  port: 5432,
+});
+app.get("/allquestions", function (req, res) {
+  // const id = parseInt(request.params.id);
+
+  pool.query('SELECT * FROM "Admin_query_table"', (error, results) => {
+    if (error) {
+      throw error;
+    }
+    res.status(200).json(results.rows);
+  });
+  // res.sendFile(__dirname + "/index.html");
 });
