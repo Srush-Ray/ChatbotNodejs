@@ -20,8 +20,7 @@
 import sys
 # import psycopg2
 print("Opened database successfully")
-
-
+sys.stdout.flush()
 # class ChatConsumer(WebsocketConsumer):
 #     asked_question = " "
 
