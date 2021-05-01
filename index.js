@@ -1,4 +1,6 @@
 require("dotenv").config();
+const cors = require("cors");
+
 var app = require("express")();
 app.use(cors());
 
@@ -6,7 +8,6 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 const { spawn } = require("child_process");
 const Pool = require("pg").Pool;
-const cors = require("cors");
 const request = require("request");
 
 const port = process.env.PORT || 3000;
