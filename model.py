@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import psycopg2
 import json
+import os
 # from asgiref.sync import async_to_sync
 # from .data_analysis import text_mining
 #from .Similarity import demo
@@ -116,4 +117,14 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    osPort = os.getenv("PORT")
+    if osPort == None:
+        port = 33507
+    else:
+        port = int(osPort)
+    app.run(host='0.0.0.0', port=port)
+
+    # port = int(os.environ.get("PORT", 33507))
+    # print(port)
+    # app.run(host='0.0.0.0', port=port, debug=True)
+    # app.run(port=5000, debug=True)

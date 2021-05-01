@@ -99,3 +99,7 @@ app.get("/allquestions", function (req, res) {
 });
 
 // heroku ps:scale web=1 other-web=1
+
+// web: python main.py
+// app: npm start
+// app: npm start
