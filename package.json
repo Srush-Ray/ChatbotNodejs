@@ -26,5 +26,10 @@
     "python-shell": "^3.0.0",
     "request": "^2.88.2",
     "socket.io": "^4.0.1"
-  }
+  },
+ "dialectOptions": {
+    "ssl": {
+        "rejectUnauthorized": false
+    }
+}
 }
