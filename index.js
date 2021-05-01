@@ -102,4 +102,4 @@ app.get("/allquestions", function (req, res) {
 
 // web: python main.py
 // app: npm start
-// app: npm start
+// web: gunicorn model:app
