@@ -1,3 +1,11 @@
+click
+flask
 Flask
-Werkzeug
 gunicorn
+itsdangerous
+Jinja2
+MarkupSafe
+Werkzeug
+psycopg2
+nltk
+gensim

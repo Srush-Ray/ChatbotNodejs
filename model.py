@@ -45,7 +45,7 @@ def index():
             ans_list = []
             id_list = []
             db_cursor = conn.cursor()
-            s = 'SELECT * FROM "Admin_query_table"'
+            s = 'SELECT * FROM "query_table"'
             try:
                 db_cursor.execute(s)
                 # Retrieve records from Postgres into a Python List
