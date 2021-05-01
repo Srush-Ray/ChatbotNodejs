@@ -8,7 +8,7 @@ const cors = require("cors");
 const request = require("request");
 
 app.use(cors());
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -70,7 +70,7 @@ io.on("connection", function (socket) {
   });
 });
 
-http.listen(port || 5000, function () {
+http.listen(port, function () {
   console.log("listening on *:" + port);
 });
 //////////////////////////////////////////////////////////////
