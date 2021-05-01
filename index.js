@@ -5,7 +5,12 @@ var app = require("express")();
 app.use(cors());
 
 var http = require("http").Server(app);
-var io = require("socket.io")(http);
+var io = require("socket.io")(http, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
 // const { spawn } = require("child_process");
 const Pool = require("pg").Pool;
 const request = require("request");
@@ -31,10 +36,13 @@ io.on("connection", function (socket) {
     // });
     request.post(
       {
-        url: "http://127.0.0.1:5000/flask",
+        url: "http://127.0.0.1:33507/flask",
         form: { message: msg, flag: "1" },
       },
       async function (error, response, body) {
+        if (error) {
+        } else {
+        }
         console.error("error:", error); // Print the error
         console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
         console.log("body:", body); // Print the data received

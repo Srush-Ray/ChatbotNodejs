@@ -117,12 +117,12 @@ def index():
 
 
 if __name__ == "__main__":
-    osPort = os.getenv("PORT")
+    osPort = os.getenv("PORTFLASK")
     if osPort == None:
         port = 33507
     else:
         port = int(osPort)
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port, debug=True)
 
     # port = int(os.environ.get("PORT", 33507))
     # print(port)
