@@ -15,6 +15,11 @@ from nltk.corpus import stopwords
 app = Flask(__name__)
 
 
+@app.route('/', methods=['POST'])
+def home():
+    return "Chatbot home open"
+
+
 @app.route('/flask', methods=['POST'])
 def index():
     asked_question = " "

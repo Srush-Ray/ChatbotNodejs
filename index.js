@@ -1,5 +1,7 @@
 require("dotenv").config();
 var app = require("express")();
+app.use(cors());
+
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 const { spawn } = require("child_process");
@@ -7,8 +9,7 @@ const Pool = require("pg").Pool;
 const cors = require("cors");
 const request = require("request");
 
-app.use(cors());
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
