@@ -1,1 +1,2 @@
-web:python app.py​
+web: python model.py
+app: npm start
