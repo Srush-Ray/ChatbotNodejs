@@ -40,7 +40,7 @@ io.on("connection", function (socket) {
         responseData = JSON.parse(body);
         console.log(responseData.qid);
         await pool.query(
-          `SELECT * FROM "Admin_query_table" where id=${responseData.qid}`,
+          `SELECT * FROM "query_table" where id=${responseData.qid}`,
           (error, results) => {
             if (error) {
               throw error;
