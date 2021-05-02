@@ -29,12 +29,14 @@
 <script>
   $(function () {
     console.log(window.location.origin)
-    if(window.location.origin==="http://localhost:3000"){
-      var socket = io.connect('http://localhost:3000');
-    }else{
-      //let text=`https://${window.location.origin}:3000`;
-      var socket = io.connect("ws://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=websocket");
-    }
+   // if(window.location.origin==="http://localhost:3000"){
+   //   var socket = io.connect('http://localhost:3000');
+   // }else{
+   //   //let text=`https://${window.location.origin}:3000`;
+   //   //window.location.hostname
+   //   var socket = io.connect("ws://cherry-surprise-78840.herokuapp.com:3000/socket.io/?EIO=4&transport=websocket");
+   // }
+    var socket = io.connect();
     $('form').submit(function(){
       $('#usermessage').append($('<li>').text( $('#m').val()));
       socket.emit('chat message', $('#m').val());
