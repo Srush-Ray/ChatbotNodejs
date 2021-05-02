@@ -32,6 +32,9 @@
         "rejectUnauthorized": false
     }
 },
+"engines": {
+  "node": "12.x"
+},
 "buildpacks": [
   {
     "url": "https://github.com/heroku/heroku-buildpack-nodejs"
