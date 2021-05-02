@@ -35,9 +35,9 @@
    // }else{
    //   //let text=`https://${window.location.origin}:3000`;
    //   //window.location.hostname
-   //   var socket = io.connect("ws://cherry-surprise-78840.herokuapp.com:3000/socket.io/?EIO=4&transport=websocket");
+   // var socket = io.connect(window.location.hostname);
    // }
-    var socket = io.connect(window.location.hostname);
+   var socket = io.connect("https://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=websocket");
     $('form').submit(function(){
       $('#usermessage').append($('<li>').text( $('#m').val()));
       socket.emit('chat message', $('#m').val());
