@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>Socket.IO chat</title>
-    <link rel="shortcut icon" type="image/ico" href="./favicon.jpg">
+    <link rel="icon" href="data:,">
+    <!-- <link rel="shortcut icon" type="image/ico" href="./favicon.jpg"> -->
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
@@ -15,7 +16,7 @@
     </style>
 <!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-
+<script src="https://cherry-surprise-78840.herokuapp.com/socket.io/socket.io.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
  -->
@@ -24,7 +25,7 @@
 <script>
   $(function () {
     console.log(window.location.origin)
-    if(window.location.origin==="http://localhost:3001"){
+    if(window.location.origin==="http://localhost:3000"){
       var socket = io.connect('http://localhost:3000');
     }else{
       

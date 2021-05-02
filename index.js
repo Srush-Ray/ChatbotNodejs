@@ -16,9 +16,9 @@ const Pool = require("pg").Pool;
 const request = require("request");
 
 const port = process.env.PORT || 3000;
-
+console.log(__dirname);
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(__dirname + "/templates/index.html");
 });
 let users = {};
 

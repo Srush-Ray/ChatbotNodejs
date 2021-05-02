@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import psycopg2
 import json
 import os
@@ -18,15 +18,17 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def home():
-    return "Chatbot home open"
+    return render_template('index.html')
 
 
 @app.route('/flask', methods=['POST'])
 def index():
     asked_question = " "
     try:
-        conn = psycopg2.connect(database="chatbot", user="postgres",
-                                password="srushti6", host="127.0.0.1", port="5432")
+        conn = psycopg2.connect(database="d8vvied9p5rnob", user="dyhgctjqbmdgzi",
+                                password="f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44", host="ec2-23-22-191-232.compute-1.amazonaws.com", port="5432")
+        # conn = psycopg2.connect(database="chatbot", user="postgres",
+        #                         password="srushti6", host="127.0.0.1", port="5432")
         asked_question = request.form['message']
         # print("hey", request.args)
         # user = request.args.get('key')
@@ -37,7 +39,7 @@ def index():
         message = request.form['message']
         ans = 'not found'
         ans_id = ''
-        # print(flag=="1")
+        print(flag, message)
         if flag == "1":
             t = None
             #obj = demo()
