@@ -1,5 +1,6 @@
 require("dotenv").config();
 const cors = require("cors");
+const request = require("request");
 
 var app = require("express")();
 app.use(cors());
@@ -13,12 +14,21 @@ var io = require("socket.io")(http, {
 });
 // const { spawn } = require("child_process");
 const Pool = require("pg").Pool;
-const request = require("request");
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
+const pool = new Pool({
+  user: "dyhgctjqbmdgzi",
+  host: "ec2-23-22-191-232.compute-1.amazonaws.com",
+  database: "d8vvied9p5rnob",
+  password: "f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44",
+  port: 5432,
+  ssl: true,
+});
 
 const port = process.env.PORT || 3000;
 console.log(__dirname);
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/templates/index.html");
+  res.sendFile(path_join(__dirname + "/templates/index.html"));
 });
 let users = {};
 
@@ -79,21 +89,6 @@ io.on("connection", function (socket) {
     // console.log(socket.rooms);
   });
 });
-
-http.listen(process.env.PORT || 3000, function () {
-  console.log("listening on *:" + port);
-});
-//////////////////////////////////////////////////////////////
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-
-const pool = new Pool({
-  user: "dyhgctjqbmdgzi",
-  host: "ec2-23-22-191-232.compute-1.amazonaws.com",
-  database: "d8vvied9p5rnob",
-  password: "f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44",
-  port: 5432,
-  ssl: true,
-});
 app.get("/allquestions", function (req, res) {
   // const id = parseInt(request.params.id);
 
@@ -105,6 +100,11 @@ app.get("/allquestions", function (req, res) {
   });
   // res.sendFile(__dirname + "/index.html");
 });
+
+http.listen(process.env.PORT || 3000, function () {
+  console.log("listening on *:" + port);
+});
+//////////////////////////////////////////////////////////////
 
 // heroku ps:scale web=1 other-web=1
 
