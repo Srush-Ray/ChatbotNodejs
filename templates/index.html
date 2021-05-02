@@ -37,7 +37,7 @@
    //   //window.location.hostname
    // var socket = io.connect(window.location.hostname);
    // }
-   var socket = io.connect("https://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=polling&t=NakNjyw");
+   var socket = io.connect("https://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=polling");
     $('form').submit(function(){
       $('#usermessage').append($('<li>').text( $('#m').val()));
       socket.emit('chat message', $('#m').val());
