@@ -18,7 +18,7 @@
     </style>
 <!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
 <!-- <script type="text/javascript" src="http://myapp.herokuapp.com/socket.io/socket.io.js"></script> -->
-
+<script src="../index.js"></script>
 <script src="https://cherry-surprise-78840.herokuapp.com/socket.io/socket.io.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <!-- <script src="/socket.io/socket.io.js"></script> -->
@@ -36,7 +36,7 @@
    //   //window.location.hostname
    //   var socket = io.connect("ws://cherry-surprise-78840.herokuapp.com:3000/socket.io/?EIO=4&transport=websocket");
    // }
-    var socket = io.connect();
+    var socket = io.connect(window.location.hostname);
     $('form').submit(function(){
       $('#usermessage').append($('<li>').text( $('#m').val()));
       socket.emit('chat message', $('#m').val());

@@ -27,20 +27,20 @@
     "request": "^2.88.2",
     "socket.io": "^4.0.1"
   },
- "dialectOptions": {
+  "dialectOptions": {
     "ssl": {
-        "rejectUnauthorized": false
+      "rejectUnauthorized": false
     }
-},
-"engines": {
-  "node": "12.x"
-},
-"buildpacks": [
-  {
-    "url": "https://github.com/heroku/heroku-buildpack-nodejs"
   },
-  {
-    "url": "https://github.com/heroku/heroku-buildpack-python"
-  }
-]
+  "engines": {
+    "node": "12.x"
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-python"
+    }
+  ]
 }
