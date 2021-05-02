@@ -31,7 +31,7 @@
       var socket = io.connect('http://localhost:3000');
     }else{
       //let text=`https://${window.location.origin}:3000`;
-      var socket = io.connect("https://cherry-surprise-78840.herokuapp.com");
+      var socket = io.connect("ws://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=websocket");
     }
     $('form').submit(function(){
       $('#usermessage').append($('<li>').text( $('#m').val()));
