@@ -1,2 +1,2 @@
-server: python model.py
+app: python model.py
 web: npm start
