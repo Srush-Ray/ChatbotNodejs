@@ -1,67 +1,172 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
     <title>Socket.IO chat</title>
-    <link rel="icon" href="data:,">
-    <link rel="shortcut icon" href="">
+    <link rel="icon" href="data:," />
+    <link rel="shortcut icon" href="" />
 
     <!-- <link rel="shortcut icon" type="image/ico" href="./favicon.jpg"> -->
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>
-<!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
-<!-- <script type="text/javascript" src="http://myapp.herokuapp.com/socket.io/socket.io.js"></script> -->
-<!-- <script src="https://cherry-surprise-78840.herokuapp.com/socket.io/socket.io.js"></script> -->
-<script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
 
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> -->
-<!-- <script src="/socket.io/socket.io.js"></script> -->
-<!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
- -->
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-<script>
-  $(function () {
-    console.log(window.location.origin)
-   // if(window.location.origin==="http://localhost:3000"){
-   //   var socket = io.connect('http://localhost:3000');
-   // }else{
-   //   //let text=`https://${window.location.origin}:3000`;
-   //   //window.location.hostname
-   // var socket = io.connect(window.location.hostname);
-   // }
-//   var socket = io.connect("https://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=polling");
-   var socket = io.connect(window.location.origin);
+    <!-- <script src="http://localhost:3000/socket.io/socket.io.js"></script> -->
+    <!-- <script type="text/javascript" src="http://myapp.herokuapp.com/socket.io/socket.io.js"></script> -->
+    <!-- <script src="https://cherry-surprise-78840.herokuapp.com/socket.io/socket.io.js"></script> -->
+    <script
+      src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+      integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+      crossorigin="anonymous"
+    ></script>
 
-    $('form').submit(function(){
-      $('#usermessage').append($('<li>').text( $('#m').val()));
-      socket.emit('chat message', $('#m').val());
-      $('#m').val('');
-      return false;
-    });
-    socket.on('chat message', function(msg){
-      $('#botmessages').append($('<li>').text(msg));
-    });
-  });
-</script>
-  
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> -->
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+    <!-- <link rel="stylesheet" type="text/css" href="../static/styles.css" /> -->
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
+
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://use.typekit.net/hoy3lrg.js"></script>
+    <!-- <script>try{Typekit.load({ async: true });}catch(e){}</script> -->
+    <link
+      rel="stylesheet prefetch"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+    />
+    <link
+      rel="stylesheet prefetch"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css"
+    />
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link
+      href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+      $(function () {
+        // console.log(window.location.origin);
+        // if(window.location.origin==="http://localhost:3000"){
+        //   var socket = io.connect('http://localhost:3000');
+        // }else{
+        //   //let text=`https://${window.location.origin}:3000`;
+        //   //window.location.hostname
+        // var socket = io.connect(window.location.hostname);
+        // }
+        //   var socket = io.connect("https://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=polling");
+        var socket = io.connect(window.location.origin);
+
+        $("form").submit(function () {
+          let msg = $("#userMsg").val();
+          $(
+            '<li class="replies"><img src="/static/images/human_icon.png" alt="" /><p> ' +
+              msg +
+              " </p></li>"
+          ).appendTo($(".messages ul"));
+
+          // $(".messages ul").append(
+          //   $(
+          //     '<li class="replies"><img src="{% static "assets/human_icon.png" %}" alt="" /><p> ' +
+          //       msg +
+          //       " </p></li>"
+          //   ).text($("#userMsg").val())
+          // );
+          //
+          // $("#usermessage").append($("<li>").text($("#userMsg").val()));
+          let data = {
+            userMsg: msg,
+            flag: "0",
+          };
+          socket.emit("chat message", data);
+          $("#userMsg").val("");
+          return false;
+        });
+        socket.on("chat message", function (botMsg) {
+          //          const responseData = JSON.parse(botMsg);
+          console.log(botMsg);
+          $(
+            '<li class="sent"><img src="/static/images/chatbot_icon.jpg" alt="" /><p>' +
+              botMsg.answer +
+              ' </p>\
+            <br><button name="' +
+              botMsg.id +
+              '" onclick="satisfiedFunction(this.name)"> Satisfied</button>\
+            <button name="' +
+              botMsg.id +
+              '" onclick="unsatisfiedFunction(this.name)"> Unsatisfied</button></li>'
+          ).appendTo($(".messages ul"));
+
+          $("#botmessages").append($("<li>").text(botMsg.answer));
+        });
+      });
+      function satisfiedFunction(id) {
+        console.log(id, "here");
+      }
+      function unsatisfiedFunction(id) {
+        console.log(id, "here");
+      }
+    </script>
   </head>
   <body>
-    <h1>from user:</h1>
-    <ul id="usermessage" type="square">
-    </ul>
-  <h1>from bot:</h1>
+    <div id="frame">
+      <div class="content">
+        <div class="contact-profile">
+          <img src="/static/images/chatbot_icon.jpg" alt="" />
+          <p>PICT BOT</p>
+        </div>
+        <div class="messages">
+          <ul id="chat-log">
+            <li class="sent">
+              <img src="/static/images/chatbot_icon.jpg" alt="" />
+              <p>Hi!! I am Bot. How may I help You?</p>
+              <br />
+            </li>
+            <li class="replies"></li>
+          </ul>
+        </div>
+        <div class="message-input">
+          <!-- <input
+          type="text"
+          id="chat-message-input"
+          placeholder="Type your question here...."
+        /> -->
+          <form action="">
+            <input
+              id="userMsg"
+              placeholder="Type your question here...."
+              autocomplete="off"
+            />
+            <!-- <button>Send</button> -->
+            <button class="submit" id="chat-message-submit">
+              <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- <h1>from user:</h1>
+    <ul id="usermessage" type="square"></ul>
+    <h1>from bot:</h1>
     <ul id="botmessages" type="disc"></ul>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+      <input id="userMsg" autocomplete="off" /><button>Send</button>
+    </form> -->
   </body>
 </html>
 

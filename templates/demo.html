@@ -1,14 +1,9 @@
 require("dotenv").config();
 const cors = require("cors");
 const request = require("request");
-const express = require("express");
-const path = require("path");
 
 var app = require("express")();
 app.use(cors());
-// app.use(express.static(__dirname + "/public"));
-// app.use(express.static("public"));
-app.use("/static", express.static("public"));
 
 var http = require("http").createServer(app);
 var io = require("socket.io")(http, {
@@ -80,12 +75,11 @@ io.on("connection", function (socket) {
                 // throw error;
                 io.in(socket.id).emit("chat message", "from bot " + error);
               }
-              let botData = {
-                answer: results.rows[0].answer,
-                id: results.rows[0].id,
-              };
-              console.log("row", botData);
-              io.in(socket.id).emit("chat message", botData);
+              console.log(results.rows[0].answer);
+              io.in(socket.id).emit(
+                "chat message",
+                "from bot :" + results.rows[0].answer
+              );
             }
           );
         }
