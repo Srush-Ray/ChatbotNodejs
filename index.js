@@ -118,3 +118,5 @@ http.listen(process.env.PORT || 3000, function () {
 //
 // webpy: python server.py
 // webjs: node server.js
+// app: gunicorn model:app
+// web: npm start
