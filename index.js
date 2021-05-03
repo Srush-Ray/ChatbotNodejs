@@ -46,7 +46,7 @@ io.on("connection", function (socket) {
     // });
     request.post(
       {
-        url: "http://127.0.0.1:33507/flask",
+        url: "http://0.0.0.0:33507/flask",
         form: { message: msg, flag: "1" },
       },
       async function (error, response, body) {
@@ -115,3 +115,6 @@ http.listen(process.env.PORT || 3000, function () {
 // web: python main.py
 // app: npm start
 // web: gunicorn model:app
+//
+// webpy: python server.py
+// webjs: node server.js
