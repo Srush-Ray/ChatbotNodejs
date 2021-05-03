@@ -51,24 +51,28 @@ io.on("connection", function (socket) {
       },
       async function (error, response, body) {
         if (error) {
+          console.log(error);
+          io.in(socket.id).emit("chat message", "from bot " + error);
         } else {
-        }
-        console.error("error:", error); // Print the error
-        console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
-        console.log("body:", body); // Print the data received
-        responseData = JSON.parse(body);
-        console.log(responseData.qid);
-        await pool.query(
-          `SELECT * FROM "query_table" where id=${responseData.qid}`,
-          (error, results) => {
-            if (error) {
-              throw error;
+          console.log("went good");
+          console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
+          console.log("body:", body); // Print the data received
+          responseData = JSON.parse(body);
+          console.log(responseData.qid);
+          await pool.query(
+            `SELECT * FROM "query_table" where id=${responseData.qid}`,
+            (error, results) => {
+              if (error) {
+                console.log(error);
+                // throw error;
+                io.in(socket.id).emit("chat message", "from bot " + error);
+              }
+              console.log(results.rows);
+              io.in(socket.id).emit("chat message", "from bot " + body);
             }
-            console.log(results.rows);
-          }
-        );
+          );
+        }
         // res.send(body); //Display the response on the website
-        io.in(socket.id).emit("chat message", "from bot " + body);
       }
     );
     // in close event we are sure that stream from child process is closed

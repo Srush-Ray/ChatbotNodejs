@@ -1,2 +1,2 @@
-server: gunicorn model:app
+server: python model.py
 web: npm start
