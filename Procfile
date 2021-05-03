@@ -1,2 +1,2 @@
-app: gunicorn model:app
-web: npm start
+webpy: python server.py
+webjs: node server.js
