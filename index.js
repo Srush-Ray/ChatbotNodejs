@@ -67,7 +67,6 @@ io.on("connection", function (socket) {
           console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
           console.log("body:", body); // Print the data received
           responseData = JSON.parse(body);
-          console.log(responseData.qid);
           await pool.query(
             `SELECT * FROM "query_table" where id=${responseData.qid}`,
             (error, results) => {
@@ -76,8 +75,11 @@ io.on("connection", function (socket) {
                 // throw error;
                 io.in(socket.id).emit("chat message", "from bot " + error);
               }
-              console.log(results.rows);
-              io.in(socket.id).emit("chat message", "from bot " + body);
+              console.log(results.rows[0].answer);
+              io.in(socket.id).emit(
+                "chat message",
+                "from bot :" + results.rows[0].answer
+              );
             }
           );
         }
