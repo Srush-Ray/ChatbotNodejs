@@ -16,11 +16,20 @@ var io = require("socket.io")(http, {
 const Pool = require("pg").Pool;
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
+// const pool = new Pool({
+//   user: "dyhgctjqbmdgzi",
+//   host: "ec2-23-22-191-232.compute-1.amazonaws.com",
+//   database: "d8vvied9p5rnob",
+//   password: "f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44",
+//   port: 5432,
+//   ssl: true,
+// });
+
 const pool = new Pool({
-  user: "dyhgctjqbmdgzi",
+  user: "xymanbcpmaetso",
   host: "ec2-23-22-191-232.compute-1.amazonaws.com",
-  database: "d8vvied9p5rnob",
-  password: "f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44",
+  database: "dfl4jabh70qmq2",
+  password: "380616dfaa56e873b66e3cd42bf259c513a1ed1fb8613aca732bffc7c230f3a5",
   port: 5432,
   ssl: true,
 });
