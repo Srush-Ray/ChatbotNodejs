@@ -46,7 +46,7 @@ io.on("connection", function (socket) {
     // });
     request.post(
       {
-        url: "http://0.0.0.0:33507/flask",
+        url: "https://flask-webapp-chatbot.herokuapp.com/flask",
         form: { message: msg, flag: "1" },
       },
       async function (error, response, body) {
