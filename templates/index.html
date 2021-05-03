@@ -69,55 +69,71 @@
         // var socket = io.connect(window.location.hostname);
         // }
         //   var socket = io.connect("https://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=polling");
-        var socket = io.connect(window.location.origin);
+        try {
+          var socket = io.connect(window.location.origin);
 
-        $("form").submit(function () {
-          let msg = $("#userMsg").val();
-          $(
-            '<li class="replies"><img src="/static/images/human_icon.png" alt="" /><p> ' +
-              msg +
-              " </p></li>"
-          ).appendTo($(".messages ul"));
+          $("form").submit(function () {
+            let msg = $("#userMsg").val();
+            $(
+              '<li class="replies"><img src="/static/images/human_icon.png" alt="" /><p> ' +
+                msg +
+                " </p></li>"
+            ).appendTo($(".messages ul"));
 
-          // $(".messages ul").append(
-          //   $(
-          //     '<li class="replies"><img src="{% static "assets/human_icon.png" %}" alt="" /><p> ' +
-          //       msg +
-          //       " </p></li>"
-          //   ).text($("#userMsg").val())
-          // );
-          //
-          // $("#usermessage").append($("<li>").text($("#userMsg").val()));
-          let data = {
-            userMsg: msg,
-            flag: "0",
-          };
-          socket.emit("chat message", data);
-          $("#userMsg").val("");
-          return false;
-        });
-        socket.on("chat message", function (botMsg) {
-          //          const responseData = JSON.parse(botMsg);
-          console.log(botMsg);
-          $(
-            '<li class="sent"><img src="/static/images/chatbot_icon.jpg" alt="" /><p>' +
-              botMsg.answer +
-              ' </p>\
+            // $(".messages ul").append(
+            //   $(
+            //     '<li class="replies"><img src="{% static "assets/human_icon.png" %}" alt="" /><p> ' +
+            //       msg +
+            //       " </p></li>"
+            //   ).text($("#userMsg").val())
+            // );
+            //
+            // $("#usermessage").append($("<li>").text($("#userMsg").val()));
+            let data = {
+              userMsg: msg,
+              flag: "0",
+            };
+            socket.emit("chat message", data);
+            $("#userMsg").val("");
+            return false;
+          });
+          socket.on("chat message", function (botMsg) {
+            //          const responseData = JSON.parse(botMsg);
+            //console.log(botMsg);
+            $(
+              '<li class="sent"><img src="/static/images/chatbot_icon.jpg" alt="" /><p>' +
+                botMsg.answer +
+                ' </p>\
             <br><button name="' +
-              botMsg.id +
-              '" onclick="satisfiedFunction(this.name)"> Satisfied</button>\
+                botMsg.id +
+                '" onclick="satisfiedFunction(this.name)"> Satisfied</button>\
             <button name="' +
-              botMsg.id +
-              '" onclick="unsatisfiedFunction(this.name)"> Unsatisfied</button></li>'
-          ).appendTo($(".messages ul"));
+                botMsg.id +
+                '" onclick="unsatisfiedFunction(this.name)"> Unsatisfied</button><div id="Div' +
+                botMsg.id +
+                '" ></div></li>'
+            ).appendTo($(".messages ul"));
 
-          $("#botmessages").append($("<li>").text(botMsg.answer));
-        });
+            // $("#botmessages").append($("<li>").text(botMsg.answer));
+          });
+          socket.on("connect_error", function (err) {
+            // handle server error here
+            $(
+              '<li class="sent"><img src="/static/images/chatbot_icon.jpg" alt="" /><p> Lost Connection. Refresh to connect again.</p></li>'
+            ).appendTo($(".messages ul"));
+          });
+        } catch (e) {
+          console.log(e);
+        }
       });
+
       function satisfiedFunction(id) {
         console.log(id, "here");
       }
       function unsatisfiedFunction(id) {
+        $(`#Div${id}`).append(
+          '<div class="contactDiv"><b>Contact Us : 7986541230<br/><a href="https://pict.edu/about-us/contact-us/">PICT Contact Us</a><b></div>'
+        );
         console.log(id, "here");
       }
     </script>
@@ -169,6 +185,4 @@
     </form> -->
   </body>
 </html>
-
-<!-- ///////////////////////////////////////// -->
-<!-- pip install python-Levenshtein -->
+<!-- <img id="likedBtn" src="/static/images/like_icon.png" alt="" /> -->

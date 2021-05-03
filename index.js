@@ -78,7 +78,10 @@ io.on("connection", function (socket) {
               if (error) {
                 console.log(error);
                 // throw error;
-                io.in(socket.id).emit("chat message", "from bot " + error);
+                io.in(socket.id).emit(
+                  "chat message",
+                  "Please try again later or contact us."
+                );
               }
               let botData = {
                 answer: results.rows[0].answer,
@@ -115,8 +118,10 @@ app.get("/allquestions", function (req, res) {
 
   pool.query('SELECT * FROM "query_table"', (error, results) => {
     if (error) {
-      throw error;
+      res.status(200).json({ message: "Error. Please check connection!!" });
+      // throw error;
     }
+
     res.status(200).json(results.rows);
   });
   // res.sendFile(__dirname + "/index.html");
