@@ -29,7 +29,7 @@ const port = process.env.PORT || 3000;
 console.log(__dirname);
 app.get("/", function (req, res) {
   console.log("at least we are here");
-  res.sendFile(path_join(__dirname + "/templates/index.html"));
+  res.sendFile(__dirname + "/templates/index.html");
 });
 let users = {};
 
