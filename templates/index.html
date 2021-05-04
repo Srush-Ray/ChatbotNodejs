@@ -131,7 +131,7 @@
         console.log(id, "here");
         $.ajax({
           type: "POST",
-          url: "http://localhost:3000/satisfycount/",
+          url: "https://cherry-surprise-78840.herokuapp.com/satisfycount/",
           data: {
             flag: "satisfied",
             qid: id,
@@ -145,7 +145,7 @@
       function unsatisfiedFunction(id) {
         $.ajax({
           type: "POST",
-          url: "http://localhost:3000/satisfycount/",
+          url: "https://cherry-surprise-78840.herokuapp.com/satisfycount/",
           data: {
             flag: "unsatisfied",
             qid: id,
