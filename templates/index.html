@@ -129,8 +129,33 @@
 
       function satisfiedFunction(id) {
         console.log(id, "here");
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:3000/satisfycount/",
+          data: {
+            flag: "satisfied",
+            qid: id,
+          },
+          success: function (data) {},
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Failure: " + errorThrown);
+          },
+        });
       }
       function unsatisfiedFunction(id) {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:3000/satisfycount/",
+          data: {
+            flag: "unsatisfied",
+            qid: id,
+          },
+          success: function (data) {},
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Failure: " + errorThrown);
+          },
+        });
+
         $(`#Div${id}`).append(
           '<div class="contactDiv"><b>Contact Us : 7986541230<br/><a href="https://pict.edu/about-us/contact-us/">PICT Contact Us</a><b></div>'
         );

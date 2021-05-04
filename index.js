@@ -1,11 +1,14 @@
 require("dotenv").config();
 const cors = require("cors");
 const request = require("request");
+// var bodyParser = require("body-parser");
 const express = require("express");
 const path = require("path");
-
 var app = require("express")();
 app.use(cors());
+app.use(express.urlencoded());
+app.use(express.json());
+
 // app.use(express.static(__dirname + "/public"));
 // app.use(express.static("public"));
 app.use("/static", express.static("public"));
@@ -44,6 +47,55 @@ console.log(__dirname);
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/templates/index.html");
 });
+app.post("/satisfycount", async function (req, res) {
+  // console.log(req.body);
+  let requestData = req.body;
+  // console.log(req.body.qid, requestData.qid);
+  await pool.query(
+    `SELECT * FROM "query_table" where id=${requestData.qid}`,
+    async (error, results) => {
+      if (error) {
+        console.log(error);
+        // throw error;
+        res.status(200).json({ message: error });
+      }
+      if (requestData.flag === "unsatisfied") {
+        let unsatCount = results.rows[0].unsatisfied;
+        unsatCount = unsatCount + 1;
+        await pool.query(
+          `UPDATE query_table SET unsatisfied = ${unsatCount} WHERE id = ${requestData.qid}`,
+          (err, updates) => {
+            if (err) {
+              // console.log(err);
+              res.status(200).json({ message: err });
+            } else if (updates) {
+              // console.log(updates.rowCount);
+              res.status(200).json({ message: "Done" });
+            }
+          }
+        );
+      } else {
+        let satCount = results.rows[0].satisfied;
+        satCount = satCount + 1;
+        await pool.query(
+          `UPDATE query_table SET satisfied = ${satCount} WHERE id = ${requestData.qid}`,
+          (err, updates) => {
+            if (err) {
+              // console.log(err);
+              res.status(200).json({ message: err });
+            } else if (updates) {
+              // console.log(updates.rowCount);
+              res.status(200).json({ message: "Done" });
+            }
+          }
+        );
+      }
+
+      // res.status(200).json({ message: "Noted" });
+    }
+  );
+});
+
 let users = {};
 
 io.on("connection", function (socket) {
@@ -83,10 +135,23 @@ io.on("connection", function (socket) {
                   "Please try again later or contact us."
                 );
               }
+
               let botData = {
                 answer: results.rows[0].answer,
                 id: results.rows[0].id,
               };
+              let viewCount = results.rows[0].viewed;
+              viewCount = viewCount + 1;
+              pool.query(
+                `UPDATE query_table SET viewed = ${viewCount} WHERE id = ${responseData.qid}`,
+                (err, updates) => {
+                  if (err) {
+                    // console.log(err);
+                  } else if (updates) {
+                    // console.log(updates.rowCount);
+                  }
+                }
+              );
               console.log("row", botData);
               io.in(socket.id).emit("chat message", botData);
             }
