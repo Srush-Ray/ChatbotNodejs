@@ -75,7 +75,7 @@
           $("form").submit(function () {
             let msg = $("#userMsg").val();
             $(
-              '<li class="replies"><img src="/static/images/human_icon.png" alt="" /><p> ' +
+              '<li class="replies" ><img src="/static/images/human_icon.png" alt="" /><p> ' +
                 msg +
                 " </p></li>"
             ).appendTo($(".messages ul"));
@@ -99,7 +99,7 @@
           });
           socket.on("chat message", function (botMsg) {
             //          const responseData = JSON.parse(botMsg);
-            //console.log(botMsg);
+            console.log(botMsg);
             $(
               '<li class="sent"><img src="/static/images/chatbot_icon.jpg" alt="" /><p>' +
                 botMsg.answer +
@@ -107,9 +107,13 @@
             <br><button name="' +
                 botMsg.id +
                 '" onclick="satisfiedFunction(this.name)"> Satisfied</button>\
-            <button name="' +
+            <button id="' +
                 botMsg.id +
-                '" onclick="unsatisfiedFunction(this.name)"> Unsatisfied</button><div id="Div' +
+                '" name="' +
+                botMsg.id +
+                ":" +
+                botMsg.userQ +
+                '" onclick="unsatisfiedFunction(this.name,this)"> Unsatisfied</button><div id="Div' +
                 botMsg.id +
                 '" ></div></li>'
             ).appendTo($(".messages ul"));
@@ -142,13 +146,20 @@
           },
         });
       }
-      function unsatisfiedFunction(id) {
+      function unsatisfiedFunction(name, ele) {
+        let splitData = name.split(":");
+        console.log(splitData);
+        console.log(ele.parentNode);
+        var divEle = $(ele.parentNode).find("div");
+        console.log(divEle[0]);
         $.ajax({
           type: "POST",
-          url: "https://cherry-surprise-78840.herokuapp.com/satisfycount/",
+          url: "http://localhost:3000/satisfycount/",
+          //url: "https://cherry-surprise-78840.herokuapp.com/satisfycount/",
           data: {
             flag: "unsatisfied",
-            qid: id,
+            qid: splitData[0],
+            userQ: splitData[1],
           },
           success: function (data) {},
           error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -156,10 +167,9 @@
           },
         });
 
-        $(`#Div${id}`).append(
+        $(divEle[0]).append(
           '<div class="contactDiv"><b>Contact Us : 7986541230<br/><a href="https://pict.edu/about-us/contact-us/">PICT Contact Us</a><b></div>'
         );
-        console.log(id, "here");
       }
     </script>
   </head>
@@ -177,7 +187,7 @@
               <p>Hi!! I am Bot. How may I help You?</p>
               <br />
             </li>
-            <li class="replies"></li>
+            <!-- <li class="replies"></li> -->
           </ul>
         </div>
         <div class="message-input">

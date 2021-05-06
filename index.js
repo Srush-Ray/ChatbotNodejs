@@ -48,8 +48,8 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/templates/index.html");
 });
 app.post("/satisfycount", async function (req, res) {
-  // console.log(req.body);
   let requestData = req.body;
+  console.log(requestData);
   // console.log(req.body.qid, requestData.qid);
   await pool.query(
     `SELECT * FROM "query_table" where id=${requestData.qid}`,
@@ -70,7 +70,19 @@ app.post("/satisfycount", async function (req, res) {
               res.status(200).json({ message: err });
             } else if (updates) {
               // console.log(updates.rowCount);
-              res.status(200).json({ message: "Done" });
+              pool.query(
+                `INSERT INTO list_unsat VALUES(DEFAULT,'${requestData.userQ}','${requestData.qid}')`,
+                (err, updates) => {
+                  if (err) {
+                    // console.log(err);
+                    res.status(200).json({ message: err });
+                  } else if (updates) {
+                    // console.log(updates.rowCount);
+                    res.status(200).json({ message: "Done" });
+                  }
+                }
+              );
+              // res.status(200).json({ message: "Done" });
             }
           }
         );
@@ -104,7 +116,7 @@ io.on("connection", function (socket) {
   socket.join(socket.id);
   // console.log(socket.rooms);
   socket.on("chat message", function (userRequest) {
-    console.log(userRequest);
+    // console.log(userRequest);
     // const python = spawn("python", ["script.py", userRequest]);
     // var dataToSend;
     // python.stdout.on("data", function (data) {
@@ -120,7 +132,6 @@ io.on("connection", function (socket) {
           console.log(error);
           io.in(socket.id).emit("chat message", "from bot " + error);
         } else {
-          console.log("went good");
           console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
           console.log("body:", body); // Print the data received
           responseData = JSON.parse(body);
@@ -139,6 +150,7 @@ io.on("connection", function (socket) {
               let botData = {
                 answer: results.rows[0].answer,
                 id: results.rows[0].id,
+                userQ: userRequest.userMsg,
               };
               let viewCount = results.rows[0].viewed;
               viewCount = viewCount + 1;
@@ -152,7 +164,7 @@ io.on("connection", function (socket) {
                   }
                 }
               );
-              console.log("row", botData);
+              // console.log("row", botData);
               io.in(socket.id).emit("chat message", botData);
             }
           );
