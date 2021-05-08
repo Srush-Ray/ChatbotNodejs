@@ -1,48 +1,224 @@
-require("dotenv").config(); const cors = require("cors"); const request =
-require("request"); var app = require("express")(); app.use(cors()); var http =
-require("http").createServer(app); var io = require("socket.io")(http, { cors: {
-origin: "*", credentials: true, }, }); // const { spawn } =
-require("child_process"); const Pool = require("pg").Pool;
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0; // const pool = new Pool({ //
-user: "dyhgctjqbmdgzi", // host: "ec2-23-22-191-232.compute-1.amazonaws.com", //
-database: "d8vvied9p5rnob", // password:
-"f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44", // port:
-5432, // ssl: true, // }); const pool = new Pool({ user: "xymanbcpmaetso", host:
-"ec2-23-22-191-232.compute-1.amazonaws.com", database: "dfl4jabh70qmq2",
-password: "380616dfaa56e873b66e3cd42bf259c513a1ed1fb8613aca732bffc7c230f3a5",
-port: 5432, ssl: true, }); const port = process.env.PORT || 3000;
-console.log(__dirname); app.get("/", function (req, res) {
-res.sendFile(__dirname + "/templates/index.html"); }); let users = {};
-io.on("connection", function (socket) { console.log("a user connected");
-users[socket.id] = socket.id; socket.join(socket.id); //
-console.log(socket.rooms); socket.on("chat message", function (userRequest) {
-console.log(userRequest); // const python = spawn("python", ["script.py",
-userRequest]); // var dataToSend; // python.stdout.on("data", function (data) {
-// dataToSend = data.toString(); // }); request.post( { url:
-"https://flask-webapp-chatbot.herokuapp.com/flask", form: { message:
-userRequest.userMsg, flag: "1" }, }, async function (error, response, body) { if
-(error) { console.log(error); io.in(socket.id).emit("chat message", "from bot "
-+ error); } else { console.log("went good"); console.log("statusCode:", response
-&& response.statusCode); // Print the response status code if a response was
-received console.log("body:", body); // Print the data received responseData =
-JSON.parse(body); await pool.query( `SELECT * FROM "query_table" where
-id=${responseData.qid}`, (error, results) => { if (error) { console.log(error);
-// throw error; io.in(socket.id).emit("chat message", "from bot " + error); }
-console.log(results.rows[0].answer); io.in(socket.id).emit( "chat message",
-"from bot :" + results.rows[0].answer ); } ); } // res.send(body); //Display the
-response on the website } ); // in close event we are sure that stream from
-child process is closed // python.on("close", (code) => { // // send data to
-browser // // res.send(dataToSend); // console.log(dataToSend); //
-io.in(socket.id).emit("chat message", "from bot " + dataToSend); // }); //
-io.in(socket.id).emit("chat message", "from bot " + msg); //
-console.log("message: " + msg); }); socket.on("disconnect", function () {
-console.info("disconnected user (id=" + socket.id + ")."); delete
-users[socket.id]; // console.log(users); // console.log(socket.rooms); }); });
-app.get("/allquestions", function (req, res) { // const id =
-parseInt(request.params.id); pool.query('SELECT * FROM "query_table"', (error,
-results) => { if (error) { throw error; } res.status(200).json(results.rows);
-}); // res.sendFile(__dirname + "/index.html"); }); http.listen(process.env.PORT
-|| 3000, function () { console.log("listening on *:" + port); });
-////////////////////////////////////////////////////////////// // heroku
-ps:scale web=1 other-web=1 // web: python main.py // app: npm start // web:
-gunicorn model:app // // webpy: python server.py // webjs: node server.js
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/demo.css" />
+
+    <script
+      src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+      integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> -->
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+    <!-- <link rel="stylesheet" type="text/css" href="../static/styles.css" /> -->
+
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://use.typekit.net/hoy3lrg.js"></script>
+    <!-- <script>try{Typekit.load({ async: true });}catch(e){}</script> -->
+    <link
+      rel="stylesheet prefetch"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+    />
+    <link
+      rel="stylesheet prefetch"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css"
+    />
+    <link
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link
+      href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+      id="bootstrap-css"
+    />
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script>
+      $(function () {
+        // console.log(window.location.origin);
+        // if(window.location.origin==="http://localhost:3000"){
+        //   var socket = io.connect('http://localhost:3000');
+        // }else{
+        //   //let text=`https://${window.location.origin}:3000`;
+        //   //window.location.hostname
+        // var socket = io.connect(window.location.hostname);
+        // }
+        //   var socket = io.connect("https://cherry-surprise-78840.herokuapp.com/socket.io/?EIO=4&transport=polling");
+        try {
+          var socket = io.connect(window.location.origin);
+
+          $("form").submit(function () {
+            let msg = $("#userMsg").val();
+            $(
+              '<li class="replies" ><img src="/static/images/human_icon.png" alt="" /><p> ' +
+                msg +
+                " </p></li>"
+            ).appendTo($(".messages ul"));
+
+            // $(".messages ul").append(
+            //   $(
+            //     '<li class="replies"><img src="{% static "assets/human_icon.png" %}" alt="" /><p> ' +
+            //       msg +
+            //       " </p></li>"
+            //   ).text($("#userMsg").val())
+            // );
+            //
+            // $("#usermessage").append($("<li>").text($("#userMsg").val()));
+            let data = {
+              userMsg: msg,
+              flag: "0",
+            };
+            socket.emit("chat message", data);
+            $("#userMsg").val("");
+            return false;
+          });
+          socket.on("chat message", function (botMsg) {
+            //          const responseData = JSON.parse(botMsg);
+            console.log(botMsg);
+            $(
+              '<li class="sent"><img src="/static/images/chatbot_icon.jpg" alt="" /><p>' +
+                botMsg.answer +
+                ' </p>\
+              <br><button name="' +
+                botMsg.id +
+                '" onclick="satisfiedFunction(this.name)"> Satisfied</button>\
+              <button id="' +
+                botMsg.id +
+                '" name="' +
+                botMsg.id +
+                ":" +
+                botMsg.userQ +
+                '" onclick="unsatisfiedFunction(this.name,this)"> Unsatisfied</button><div id="Div' +
+                botMsg.id +
+                '" ></div></li>'
+            ).appendTo($(".messages ul"));
+
+            // $("#botmessages").append($("<li>").text(botMsg.answer));
+          });
+          socket.on("connect_error", function (err) {
+            // handle server error here
+            $(
+              '<li class="sent"><img src="/static/images/chatbot_icon.jpg" alt="" /><p> Lost Connection. Refresh to connect again.</p></li>'
+            ).appendTo($(".messages ul"));
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      });
+
+      function satisfiedFunction(id) {
+        console.log(id, "here");
+        $.ajax({
+          type: "POST",
+          url: "https://cherry-surprise-78840.herokuapp.com/satisfycount/",
+          data: {
+            flag: "satisfied",
+            qid: id,
+          },
+          success: function (data) {},
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Failure: " + errorThrown);
+          },
+        });
+      }
+      function unsatisfiedFunction(name, ele) {
+        let splitData = name.split(":");
+        console.log(splitData);
+        console.log(ele.parentNode);
+        var divEle = $(ele.parentNode).find("div");
+        console.log(divEle[0]);
+        $.ajax({
+          type: "POST",
+          // url: "http://localhost:3000/satisfycount/",
+          url: "https://cherry-surprise-78840.herokuapp.com/satisfycount/",
+          data: {
+            flag: "unsatisfied",
+            qid: splitData[0],
+            userQ: splitData[1],
+          },
+          success: function (data) {},
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Failure: " + errorThrown);
+          },
+        });
+
+        $(divEle[0]).append(
+          '<div class="contactDiv"><b>Contact Us : 7986541230<br/><a href="https://pict.edu/about-us/contact-us/">PICT Contact Us</a><b></div>'
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container d-flex align-items-center justify-content-center">
+      <div class="">
+        <div class="row" id="frame">
+          <div class="col-12">
+            <div class="row row1-header">
+              <div class="contact-profile col-12">
+                <img
+                  src="/static/images/chatbot_icon.jpg"
+                  alt=""
+                  class="img-header"
+                />
+                <p class="header-text">PICT BOT</p>
+              </div>
+            </div>
+            <div class="row row2-content mt-0 pt-0">
+              <div
+                class="col-12 p-0 m-0 d-flex align-items-center justify-content-center"
+              >
+                <div class="messages">
+                  <ul id="chat-log">
+                    <li class="sent">
+                      <img
+                        class="bot-img"
+                        src="/static/images/chatbot_icon.jpg"
+                        alt=""
+                      />
+                      <p>Hi!! I am Bot. How may I help You?</p>
+                      <br />
+                    </li>
+                    <!-- <!-- <li class="replies"></li>  -->
+                  </ul>
+                </div>
+                <div class="form-div">
+                  <form action="">
+                    <input
+                      id="userMsg"
+                      class="chat-input"
+                      placeholder="Type your question here...."
+                      autocomplete="off"
+                    />
+                    <!-- <button>Send</button> -->
+                    <button class="submit" id="chat-message-submit">
+                      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
