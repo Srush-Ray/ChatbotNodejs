@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 import psycopg2
 import json
 import os
@@ -11,29 +11,25 @@ import nltk
 import gensim
 from gensim import corpora
 from nltk.corpus import stopwords
-
+import string
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-
-
-@app.route('/menu')
-def menu():
-    return "Hey check for flask"
+    return "Chatbot home open"
 
 
 @app.route('/flask', methods=['POST'])
 def index():
     asked_question = " "
     try:
-        conn = psycopg2.connect(database="d8vvied9p5rnob", user="dyhgctjqbmdgzi",
-                                password="f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44", host="ec2-23-22-191-232.compute-1.amazonaws.com", port="5432")
-        # conn = psycopg2.connect(database="chatbot", user="postgres",
-        #                         password="srushti6", host="127.0.0.1", port="5432")
+        # conn = psycopg2.connect(database="d8vvied9p5rnob", user="dyhgctjqbmdgzi",
+        #                         password="f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44", host="ec2-23-22-191-232.compute-1.amazonaws.com", port="5432")
+
+        conn = psycopg2.connect(database="dfl4jabh70qmq2", user="xymanbcpmaetso",
+                                password="380616dfaa56e873b66e3cd42bf259c513a1ed1fb8613aca732bffc7c230f3a5", host="ec2-23-22-191-232.compute-1.amazonaws.com", port="5432")
         asked_question = request.form['message']
         # print("hey", request.args)
         # user = request.args.get('key')
@@ -44,7 +40,7 @@ def index():
         message = request.form['message']
         ans = 'not found'
         ans_id = ''
-        print(flag, message)
+        # print(flag=="1")
         if flag == "1":
             t = None
             #obj = demo()
@@ -64,8 +60,9 @@ def index():
                     ans_list.append(row[2])
                 # print(que_list)
                 file2_docs = []
+                stopset = stopwords.words('english') + list(string.punctuation)
 
-                gen_docs = [[w.lower() for w in word_tokenize(text)]
+                gen_docs = [[w.lower() for w in word_tokenize(text) if w not in stopset]
                             for text in que_list]
                 dictionary = gensim.corpora.Dictionary(gen_docs)
                 corpus = [dictionary.doc2bow(gen_doc) for gen_doc in gen_docs]
@@ -78,7 +75,8 @@ def index():
                     file2_docs.append(line)
 
                 for line in file2_docs:
-                    query_doc = [w.lower() for w in word_tokenize(line)]
+                    query_doc = [w.lower()
+                                 for w in word_tokenize(line) if w not in stopset]
                     query_doc_bow = dictionary.doc2bow(query_doc)
 
                 query_doc_tf_idf = tf_idf[query_doc_bow]
@@ -124,12 +122,12 @@ def index():
 
 
 if __name__ == "__main__":
-    osPort = os.getenv("PORTFLASK")
+    osPort = os.getenv("PORT")
     if osPort == None:
         port = 33507
     else:
         port = int(osPort)
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)
 
     # port = int(os.environ.get("PORT", 33507))
     # print(port)
