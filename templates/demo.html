@@ -52,7 +52,7 @@
       id="bootstrap-css"
     />
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script>
+    <!-- <script>
       $(function () {
         // console.log(window.location.origin);
         // if(window.location.origin==="http://localhost:3000"){
@@ -165,10 +165,32 @@
           '<div class="contactDiv"><b>Contact Us : 7986541230<br/><a href="https://pict.edu/about-us/contact-us/">PICT Contact Us</a><b></div>'
         );
       }
+    </script> -->
+    <style>
+      .botoutputButtons {
+        background-color: transparent;
+        border: 1px solid grey;
+        border-radius: 5px;
+      }
+    </style>
+    <script>
+      function autosubmit(question) {
+        $(
+          '<li class="replies" ><img src="/static/images/human_icon.png" alt="" /><p> ' +
+            msg +
+            " </p></li>"
+        ).appendTo($(".messages ul"));
+
+        let data = {
+          userMsg: question,
+          flag: "0",
+        };
+        socket.emit("chat message", data);
+      }
     </script>
   </head>
   <body>
-    <div class="container d-flex align-items-center justify-content-center">
+    <!-- <div class="container d-flex align-items-center justify-content-center">
       <div class="">
         <div class="row" id="frame">
           <div class="col-12">
@@ -197,7 +219,7 @@
                       <p>Hi!! I am Bot. How may I help You?</p>
                       <br />
                     </li>
-                    <!-- <!-- <li class="replies"></li>  -->
+                   
                   </ul>
                 </div>
                 <div class="form-div">
@@ -208,7 +230,6 @@
                       placeholder="Type your question here...."
                       autocomplete="off"
                     />
-                    <!-- <button>Send</button> -->
                     <button class="submit" id="chat-message-submit">
                       <i class="fa fa-paper-plane" aria-hidden="true"></i>
                     </button>
@@ -219,6 +240,23 @@
           </div>
         </div>
       </div>
+    </div> -->
+    <div>
+      <span>
+        <button class="botoutputButtons" onclick="autosubmit('cap rpund')">
+          CAP Round
+        </button>
+      </span>
+
+      <span>
+        <button class="botoutputButtons">CAP Round</button>
+      </span>
+      <span>
+        <button class="botoutputButtons">CAP Round</button>
+      </span>
+      <span>
+        <button class="botoutputButtons">CAP Round</button>
+      </span>
     </div>
   </body>
 </html>

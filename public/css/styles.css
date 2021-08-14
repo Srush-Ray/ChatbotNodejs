@@ -219,7 +219,7 @@ body {
   outline: none;
 }
 
-#frame .content .messages ul li.sent button {
+#frame .content .messages ul li.sent .feedbackbutton {
   background: transparent;
   border: black;
   color: rgba(0, 150, 136, 1);
@@ -230,8 +230,24 @@ body {
   font-size: 10px;
 }
 
-#frame .content .messages ul li.sent button:hover {
+#frame .content .messages ul li.sent .feedbackbutton:hover {
   box-shadow: 2px 2px 2px #888888;
+}
+#frame .content .messages ul li .botoutputDiv {
+  background: #435f7a;
+  color: #f5f5f5;
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 20px;
+  max-width: 205px;
+  line-height: 130%;
+}
+#frame .content .messages ul li .botoutputButtons {
+  background-color: transparent !important;
+  border: 2px solid grey !important;
+  border-radius: 5px !important;
+  color: white !important;
+  margin-bottom: 5px;
 }
 /* * {
     margin: 0;

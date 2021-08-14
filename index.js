@@ -9,8 +9,6 @@ app.use(cors());
 app.use(express.urlencoded());
 app.use(express.json());
 
-// app.use(express.static(__dirname + "/public"));
-// app.use(express.static("public"));
 app.use("/static", express.static("public"));
 
 var http = require("http").createServer(app);
@@ -24,15 +22,6 @@ var io = require("socket.io")(http, {
 const Pool = require("pg").Pool;
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
-// const pool = new Pool({
-//   user: "dyhgctjqbmdgzi",
-//   host: "ec2-23-22-191-232.compute-1.amazonaws.com",
-//   database: "d8vvied9p5rnob",
-//   password: "f42f02ba1dec14620f2ee83428f08c834f39edf81ed018d48669ebbfdbc4bb44",
-//   port: 5432,
-//   ssl: true,
-// });
-
 const pool = new Pool({
   user: "xymanbcpmaetso",
   host: "ec2-23-22-191-232.compute-1.amazonaws.com",
@@ -41,16 +30,22 @@ const pool = new Pool({
   port: 5432,
   ssl: true,
 });
+const keywords = ["admission", "hostel"];
 
 const port = process.env.PORT || 3000;
+
 console.log(__dirname);
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/templates/index.html");
 });
+
+app.get("/demo", function (req, res) {
+  res.sendFile(__dirname + "/templates/demo.html");
+});
+
 app.post("/satisfycount", async function (req, res) {
   let requestData = req.body;
   console.log(requestData);
-  // console.log(req.body.qid, requestData.qid);
   await pool.query(
     `SELECT * FROM "query_table" where id=${requestData.qid}`,
     async (error, results) => {
@@ -66,10 +61,8 @@ app.post("/satisfycount", async function (req, res) {
           `UPDATE query_table SET unsatisfied = ${unsatCount} WHERE id = ${requestData.qid}`,
           (err, updates) => {
             if (err) {
-              // console.log(err);
               res.status(200).json({ message: err });
             } else if (updates) {
-              // console.log(updates.rowCount);
               pool.query(
                 `INSERT INTO list_unsat VALUES(DEFAULT,'${requestData.userQ}','${requestData.qid}')`,
                 (err, updates) => {
@@ -77,7 +70,6 @@ app.post("/satisfycount", async function (req, res) {
                     // console.log(err);
                     res.status(200).json({ message: err });
                   } else if (updates) {
-                    // console.log(updates.rowCount);
                     res.status(200).json({ message: "Done" });
                   }
                 }
@@ -102,8 +94,6 @@ app.post("/satisfycount", async function (req, res) {
           }
         );
       }
-
-      // res.status(200).json({ message: "Noted" });
     }
   );
 });
@@ -115,84 +105,72 @@ io.on("connection", function (socket) {
   users[socket.id] = socket.id;
   socket.join(socket.id);
   // console.log(socket.rooms);
+
   socket.on("chat message", function (userRequest) {
-    // console.log(userRequest);
-    // const python = spawn("python", ["script.py", userRequest]);
-    // var dataToSend;
-    // python.stdout.on("data", function (data) {
-    //   dataToSend = data.toString();
-    // });
-    request.post(
-      {
-        url: "https://flask-webapp-chatbot.herokuapp.com/flask",
-        form: { message: userRequest.userMsg, flag: "1" },
-      },
-      async function (error, response, body) {
-        if (error) {
-          console.log(error);
-          io.in(socket.id).emit("chat message", "from bot " + error);
-        } else {
-          console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
-          console.log("body:", body); // Print the data received
-          responseData = JSON.parse(body);
-          await pool.query(
-            `SELECT * FROM "query_table" where id=${responseData.qid}`,
-            (error, results) => {
-              if (error) {
-                console.log(error);
-                // throw error;
-                io.in(socket.id).emit(
-                  "chat message",
-                  "Please try again later or contact us."
-                );
-              }
-
-              let botData = {
-                answer: results.rows[0].answer,
-                id: results.rows[0].id,
-                userQ: userRequest.userMsg,
-              };
-              let viewCount = results.rows[0].viewed;
-              viewCount = viewCount + 1;
-              pool.query(
-                `UPDATE query_table SET viewed = ${viewCount} WHERE id = ${responseData.qid}`,
-                (err, updates) => {
-                  if (err) {
-                    // console.log(err);
-                  } else if (updates) {
-                    // console.log(updates.rowCount);
-                  }
+    if (checkInput(userRequest.userMsg, socket.id)) {
+    } else {
+      console.log(userRequest);
+      request.post(
+        {
+          url: "https://flask-webapp-chatbot.herokuapp.com/flask",
+          form: { message: userRequest.userMsg, flag: "1" },
+        },
+        async function (error, response, body) {
+          if (error) {
+            console.log(error);
+            io.in(socket.id).emit("chat message", "from bot " + error);
+          } else {
+            console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
+            console.log("body:", body); // Print the data received
+            responseData = JSON.parse(body);
+            await pool.query(
+              `SELECT * FROM "query_table" where id=${responseData.qid}`,
+              (error, results) => {
+                if (error) {
+                  console.log(error);
+                  // throw error;
+                  io.in(socket.id).emit(
+                    "chat message",
+                    "Please try again later or contact us."
+                  );
                 }
-              );
-              // console.log("row", botData);
-              io.in(socket.id).emit("chat message", botData);
-            }
-          );
-        }
-        // res.send(body); //Display the response on the website
-      }
-    );
-    // in close event we are sure that stream from child process is closed
-    // python.on("close", (code) => {
-    //   // send data to browser
-    //   // res.send(dataToSend);
-    //   console.log(dataToSend);
-    //   io.in(socket.id).emit("chat message", "from bot " + dataToSend);
-    // });
 
-    // io.in(socket.id).emit("chat message", "from bot " + msg);
-    // console.log("message: " + msg);
+                let botData = {
+                  answer: results.rows[0].answer,
+                  id: results.rows[0].id,
+                  userQ: userRequest.userMsg,
+                  fromAI: false,
+                };
+                let viewCount = results.rows[0].viewed;
+                viewCount = viewCount + 1;
+                pool.query(
+                  `UPDATE query_table SET viewed = ${viewCount} WHERE id = ${responseData.qid}`,
+                  (err, updates) => {
+                    if (err) {
+                      // console.log(err);
+                    } else if (updates) {
+                      // console.log(updates.rowCount);
+                    }
+                  }
+                );
+                console.log("row", botData);
+
+                io.in(socket.id).emit("chat message", botData);
+              }
+            );
+          }
+          // res.send(body); //Display the response on the website
+        }
+      );
+    }
   });
   socket.on("disconnect", function () {
     console.info("disconnected user (id=" + socket.id + ").");
     delete users[socket.id];
-    // console.log(users);
-    // console.log(socket.rooms);
   });
 });
 app.get("/allquestions", function (req, res) {
   // const id = parseInt(request.params.id);
-
   pool.query('SELECT * FROM "query_table"', (error, results) => {
     if (error) {
       res.status(200).json({ message: "Error. Please check connection!!" });
@@ -207,13 +185,47 @@ app.get("/allquestions", function (req, res) {
 http.listen(process.env.PORT || 3000, function () {
   console.log("listening on *:" + port);
 });
-//////////////////////////////////////////////////////////////
 
-// heroku ps:scale web=1 other-web=1
+function checkInput(userInput, id) {
+  console.log(userInput);
 
-// web: python main.py
-// app: npm start
-// web: gunicorn model:app
-//
-// webpy: python server.py
-// webjs: node server.js
+  if (keywords.includes(userInput.toLowerCase())) {
+    var botData = {
+      outputString: getHTML(userInput),
+      fromAI: true,
+    };
+    io.in(id).emit("chat message", botData);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function getHTML(word) {
+  switch (word) {
+    case "admission":
+      var outputString = `<div class="botoutputDiv">
+      <h5>Select type of Admission:</h5>
+      <span>
+        <button class="botoutputButtons" onclick="autoSubmit('CAP Round Admission');">CAP Round</button>
+      </span>
+      <span>
+        <button class="botoutputButtons" onclick="autoSubmit('NRI Admission Process');">NRI Admission Process</button>
+      </span>
+    </div>`;
+      return outputString;
+    case "hostel":
+      var outputString = `<div class="botoutputDiv">
+      <p>Select one:</p>
+      <span>
+        <button class="botoutputButtons" onclick="autoSubmit('Girls hostel');">Girls</button>
+      </span>
+      <span>
+        <button class="botoutputButtons" onclick="autoSubmit('Boys hostel');">Boys</button>
+      </span>
+    </div>`;
+      return outputString;
+    default:
+      break;
+  }
+}
